@@ -3,10 +3,14 @@ package pl.stepien.investmentappangular.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(value = "id", ignoreUnknown = true)
 public class CryptoCurrency {
     @Id
@@ -24,5 +28,5 @@ public class CryptoCurrency {
     private Long marketCap;
     private String image;
     @OneToOne
-    private  Investment investment;
+    private Investment investment;
 }

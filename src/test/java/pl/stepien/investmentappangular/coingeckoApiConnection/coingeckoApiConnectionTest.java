@@ -7,9 +7,9 @@ import java.util.List;
 
 public class coingeckoApiConnectionTest {
     @Test
-    public void testGetList(){
+    public void testGetList() {
         coingeckoApiConnection coingeckoApiConnection = new coingeckoApiConnection();
         List<CryptoCurrency> resultList = coingeckoApiConnection.getCrypto();
-        assert(resultList != null);
+        assert (resultList != null);
     }
 }

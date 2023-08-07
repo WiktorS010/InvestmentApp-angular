@@ -1,12 +1,14 @@
 package pl.stepien.investmentappangular.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,11 +17,9 @@ public class User {
     private String firstName;
     private String lastName;
     private Integer age;
-    @OneToMany
-    private List<Investment> investments;
+
     // TODO
 //    private String password; private Role role;
-
 
 
 }
