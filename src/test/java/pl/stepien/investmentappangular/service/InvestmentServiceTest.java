@@ -1,6 +1,5 @@
 package pl.stepien.investmentappangular.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +9,8 @@ import pl.stepien.investmentappangular.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
+
 @SpringBootTest
 public class InvestmentServiceTest {
     @Autowired
@@ -18,7 +19,7 @@ public class InvestmentServiceTest {
     private UserService userService;
 
     @Test
-    public void testGetAllInvestmentsSortedByIncome() {
+    void testGetAllInvestmentsSortedByIncome() {
         User testUser = userService.getUserById(1L);
         List<Investment> sortedList = investmentService.getAllInvestmentsSortedByIncome(testUser);
 
@@ -29,6 +30,6 @@ public class InvestmentServiceTest {
         for (int i = 0; i < sortedList.toArray().length; i++) {
             System.out.println(sortedList.toArray()[i]);
         }
-        Assertions.assertArrayEquals(listToCompare.toArray(), sortedList.toArray());
+        assertArrayEquals(listToCompare.toArray(), sortedList.toArray());
     }
 }

@@ -1,15 +1,17 @@
 package pl.stepien.investmentappangular.coingeckoApiConnection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import pl.stepien.investmentappangular.model.CryptoCurrency;
 
 import java.util.List;
 
-public class coingeckoApiConnectionTest {
+class coingeckoApiConnectionTest {
     @Test
-    public void testGetList() {
-        coingeckoApiConnection coingeckoApiConnection = new coingeckoApiConnection();
+    void testGetList() {
+        CoingeckoApiConnection coingeckoApiConnection = new CoingeckoApiConnection();
         List<CryptoCurrency> resultList = coingeckoApiConnection.getCrypto();
         assert (resultList != null);
     }
+
 }
