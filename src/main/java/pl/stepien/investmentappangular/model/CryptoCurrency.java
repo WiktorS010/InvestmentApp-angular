@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -22,11 +25,49 @@ public class CryptoCurrency {
     private Long marketCapRank;
     @JsonProperty("current_price")
     private Double price;
+    @JsonProperty("current_price_string")
+    private String priceString;
     @JsonProperty("price_change_percentage_24h")
     private Double dayChange;
     @JsonProperty("market_cap")
     private Long marketCap;
+    @JsonProperty("market_cap_string")
+    private String marketCapString;
     private String image;
     @OneToOne
     private Investment investment;
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol.toUpperCase();
+    }
+
+    public void setDayChange(Double dayChange) {
+        this.dayChange = Math.round(dayChange * 100.0) / 100.0;
+    }
+
+    public String getMarketCapString() {
+        return formatNumberWithCommas(marketCap);
+    }
+
+    public void setMarketCapString(String marketCapString) {
+        this.marketCapString = marketCapString;
+    }
+
+    public String getPriceString(){
+        return formatNumberWithCommas(price);
+    }
+    public void setPriceString(String priceString){
+        this.priceString = priceString;
+    }
+
+
+    private String formatNumberWithCommas(Long number) {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+        return numberFormat.format(number);
+    }
+    private String formatNumberWithCommas(Double number) {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+        return numberFormat.format(number);
+    }
+
 }

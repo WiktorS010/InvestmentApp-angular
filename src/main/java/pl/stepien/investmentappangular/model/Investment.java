@@ -14,13 +14,20 @@ public class Investment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String investmentName;
     private Double quantityOfCryptocurrency;
     private ZonedDateTime created;
     private Double enterPrice;
     private Double income;
+    @OneToOne
+    private CryptoCurrency cryptoCurrency;
+    @ManyToOne
+    private User user;
+    //    private Duration beingActive; private ZonedDateTime created;
 
-    public Investment(Long id, Double quantityOfCryptocurrency, ZonedDateTime created, Double enterPrice, Double income, CryptoCurrency cryptoCurrency, User user) {
+    public Investment(Long id, String investmentName, Double quantityOfCryptocurrency, ZonedDateTime created, Double enterPrice, Double income, CryptoCurrency cryptoCurrency, User user) {
         this.id = id;
+        this.investmentName = investmentName;
         this.quantityOfCryptocurrency = quantityOfCryptocurrency;
         this.created = created;
         this.enterPrice = enterPrice;
@@ -37,12 +44,8 @@ public class Investment {
     }
 
     public double calculateIncome(CryptoCurrency cryptoCurrency) {
-        return quantityOfCryptocurrency * cryptoCurrency.getPrice() - quantityOfCryptocurrency * enterPrice;
+        return this.quantityOfCryptocurrency * cryptoCurrency.getPrice() - this.quantityOfCryptocurrency * this.enterPrice;
     }
 
-    @OneToOne
-    private CryptoCurrency cryptoCurrency;
-    @ManyToOne
-    private User user;
-//    private Duration beingActive; private ZonedDateTime created;
+
 }

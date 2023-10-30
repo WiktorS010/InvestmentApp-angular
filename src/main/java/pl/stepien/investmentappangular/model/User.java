@@ -21,5 +21,4 @@ public class User {
     // TODO
 //    private String password; private Role role;
 
-
 }

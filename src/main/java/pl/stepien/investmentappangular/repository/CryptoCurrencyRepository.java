@@ -6,4 +6,5 @@ import pl.stepien.investmentappangular.model.CryptoCurrency;
 @Repository
 public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, Long> {
     CryptoCurrency findCryptoCurrencyByInvestment_Id(Long investments_id);
+    CryptoCurrency findBySymbol(String symbol);
 }
