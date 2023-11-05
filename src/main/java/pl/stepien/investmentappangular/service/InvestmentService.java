@@ -6,8 +6,6 @@ import pl.stepien.investmentappangular.model.Investment;
 import pl.stepien.investmentappangular.model.User;
 import pl.stepien.investmentappangular.repository.CryptoCurrencyRepository;
 import pl.stepien.investmentappangular.repository.InvestmentRepository;
-import pl.stepien.investmentappangular.repository.UserRepository;
-
 import java.util.Comparator;
 import java.util.List;
 

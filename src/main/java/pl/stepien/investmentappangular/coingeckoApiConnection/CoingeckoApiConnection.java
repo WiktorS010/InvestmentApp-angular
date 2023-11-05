@@ -23,4 +23,11 @@ public class CoingeckoApiConnection {
                         });
         return response.getBody();
     }
+    public List<CryptoCurrency> getCrypto() {
+        ResponseEntity<List<CryptoCurrency>> response =
+                restTemplate.exchange(CRYPTO_URL, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<CryptoCurrency>>() {
+                        });
+        return response.getBody();
+    }
 }

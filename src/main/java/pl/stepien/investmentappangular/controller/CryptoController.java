@@ -1,14 +1,19 @@
 package pl.stepien.investmentappangular.controller;
 
+
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.stepien.investmentappangular.coingeckoApiConnection.CoingeckoApiConnection;
+import pl.stepien.investmentappangular.model.CryptoCurrency;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+
 
 @RestController
 @RequestMapping("/cryptocurrency")
@@ -17,8 +22,15 @@ public class CryptoController {
     private CoingeckoApiConnection coingeckoApiConnection;
 
     @GetMapping("/list")
-    public ResponseEntity<List<?>> showCryptoList() {
-        return ResponseEntity.ok(coingeckoApiConnection.getCrypto(PageRequest.of(10, 20)));
+    public ResponseEntity<List<CryptoCurrency>> showCryptoList() {
+        return ResponseEntity.ok(coingeckoApiConnection.getCrypto(PageRequest.of(1, 20)));
     }
-
+    @PostMapping("/list")
+    public ResponseEntity<Map<String, Object>> sendInfoFromCryptoList(@RequestBody Map<String, Object> request, HttpSession session) {
+        String symbol = (String) request.get("symbol");
+        Map<String, Object> response = new HashMap<>();
+        response.put("symbol", symbol);
+        session.setAttribute("symbol", symbol);
+        return ResponseEntity.ok(response);
+    }
 }

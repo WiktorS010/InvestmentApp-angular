@@ -31,7 +31,7 @@ public class Investment {
         this.quantityOfCryptocurrency = quantityOfCryptocurrency;
         this.created = created;
         this.enterPrice = enterPrice;
-        this.income = calculateIncome(cryptoCurrency);
+        this.income = income;
         this.cryptoCurrency = cryptoCurrency;
         this.user = user;
     }
@@ -42,10 +42,5 @@ public class Investment {
         this.income = income;
         this.user = user;
     }
-
-    public double calculateIncome(CryptoCurrency cryptoCurrency) {
-        return this.quantityOfCryptocurrency * cryptoCurrency.getPrice() - this.quantityOfCryptocurrency * this.enterPrice;
-    }
-
 
 }
