@@ -13,6 +13,7 @@ import java.util.List;
 
 @Component
 public class CoingeckoApiConnection {
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final String CRYPTO_URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20";
 
