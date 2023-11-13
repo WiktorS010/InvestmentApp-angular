@@ -18,13 +18,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/cryptocurrency")
 public class CryptoController {
+
     @Autowired
     private CoingeckoApiConnection coingeckoApiConnection;
 
+    //Czy zawsze dostaniesz liste i zawsze powinines zwracac response ok?
     @GetMapping("/list")
     public ResponseEntity<List<CryptoCurrency>> showCryptoList() {
         return ResponseEntity.ok(coingeckoApiConnection.getCrypto(PageRequest.of(1, 20)));
     }
+
+    //To chyba niegotowe :D
+    //Zrob jakis obiekt requestu zamiast mapy mordo
     @PostMapping("/list")
     public ResponseEntity<Map<String, Object>> sendInfoFromCryptoList(@RequestBody Map<String, Object> request, HttpSession session) {
         String symbol = (String) request.get("symbol");

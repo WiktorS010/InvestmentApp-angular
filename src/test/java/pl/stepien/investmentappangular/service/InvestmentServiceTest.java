@@ -11,6 +11,9 @@ import java.util.List;
 
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
 
+//Operuj moze na mockach lub mock beanach
+//mockuj co maja zwracac dane serwisy w jakis sytuacjach. Jak bedziesz wydzielal Fasade to ja bedzie mozna fajnie przetestowac
+//mockowo
 @SpringBootTest
 public class InvestmentServiceTest {
     @Autowired

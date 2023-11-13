@@ -41,6 +41,7 @@ public class CryptoCurrency {
         this.symbol = symbol.toUpperCase();
     }
 
+    //Nie wiem co tu sie wyprawia - zapoznaj sie z klasami Instant - kozacka klasa lub LocalDateTime
     public void setDayChange(Double dayChange) {
         this.dayChange = Math.round(dayChange * 100.0) / 100.0;
     }
@@ -61,6 +62,13 @@ public class CryptoCurrency {
     }
 
 
+    //W obu metodach korzystasz na koniec z metody format klasy String, zauwaz ze metoda ta przyjmuje argument klasy Object
+    //Co za tym idzie mozemy miec jedna metode formatNumberWithCommas - przekazac jako argument instancje klasy Object.
+    //Te metody nie dotycza bezposrednio klasy CruptoCurrency - zrob np klase DataUtils
+    //tam zrob sobie tam static final NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+    //i publiczna statyczna metode formatNumberWithCommas(Object number) {
+    //i tego sobie uzyj - najlepiej nie tu w getterze, getter powinien pobrac wartosc jak jest czyli np Long,
+    //a jesli potrzebujesz stringa to uzyj tej statycznej metody z utilsow tam gdzie se pobierasz tym gettem
     private String formatNumberWithCommas(Long number) {
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
         return numberFormat.format(number);

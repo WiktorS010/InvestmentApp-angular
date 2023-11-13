@@ -4,6 +4,10 @@ import org.springframework.stereotype.Service;
 import pl.stepien.investmentappangular.model.User;
 import pl.stepien.investmentappangular.repository.UserRepository;
 
+
+//BTW: nie ma tu jakiegos pom.xml? Jakiegos gradle'a? Zarządzania dependencjami?
+//Zapoznaj sie z tym: https://www.baeldung.com/exception-handling-for-rest-with-spring
+//Zrob pakiet exception i dodaj jakies customowe Excepiony -> chocby dziedziczace po RuntimeExceptionie
 @Service
 public class UserService {
     private final UserRepository userRepository;

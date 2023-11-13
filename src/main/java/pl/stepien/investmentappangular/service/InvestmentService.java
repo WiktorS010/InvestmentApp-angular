@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class InvestmentService {
+
     private final InvestmentRepository investmentRepository;
     private final CryptoCurrencyRepository cryptoCurrencyRepository;
     private final UserService userService;
