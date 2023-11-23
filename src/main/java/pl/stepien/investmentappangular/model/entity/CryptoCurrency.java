@@ -1,4 +1,4 @@
-package pl.stepien.investmentappangular.model;
+package pl.stepien.investmentappangular.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,37 +37,5 @@ public class CryptoCurrency {
     @OneToOne
     private Investment investment;
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol.toUpperCase();
-    }
-
-    public void setDayChange(Double dayChange) {
-        this.dayChange = Math.round(dayChange * 100.0) / 100.0;
-    }
-
-    public String getMarketCapString() {
-        return formatNumberWithCommas(marketCap);
-    }
-
-    public void setMarketCapString(String marketCapString) {
-        this.marketCapString = marketCapString;
-    }
-
-    public String getPriceString(){
-        return formatNumberWithCommas(price);
-    }
-    public void setPriceString(String priceString){
-        this.priceString = priceString;
-    }
-
-
-    private String formatNumberWithCommas(Long number) {
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-        return numberFormat.format(number);
-    }
-    private String formatNumberWithCommas(Double number) {
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-        return numberFormat.format(number);
-    }
 
 }

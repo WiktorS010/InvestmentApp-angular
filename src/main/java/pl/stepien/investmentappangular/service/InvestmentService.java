@@ -1,35 +1,62 @@
 package pl.stepien.investmentappangular.service;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import pl.stepien.investmentappangular.model.Investment;
-import pl.stepien.investmentappangular.model.User;
-import pl.stepien.investmentappangular.repository.CryptoCurrencyRepository;
+import pl.stepien.investmentappangular.model.entity.CryptoCurrency;
+import pl.stepien.investmentappangular.model.entity.Investment;
+import pl.stepien.investmentappangular.model.entity.User;
+import pl.stepien.investmentappangular.model.request.InvestmentRequest;
 import pl.stepien.investmentappangular.repository.InvestmentRepository;
+
+
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class InvestmentService {
+    private static final Logger log = LogManager.getLogger(InvestmentService.class);
     private final InvestmentRepository investmentRepository;
-    private final CryptoCurrencyRepository cryptoCurrencyRepository;
     private final UserService userService;
+    private final CoingeckoService coingeckoService;
+    private final CryptoCurrencyService cryptoCurrencyService;
+    private final DateService dateService;
 
-    public InvestmentService(InvestmentRepository investmentRepository, CryptoCurrencyRepository cryptoCurrencyRepository, UserService userService) {
-        this.investmentRepository = investmentRepository;
-        this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-        this.userService = userService;
-    }
 
     public List<Investment> getAllInvestmentsSortedByIncome(User user) {
-        log.info("Loading all investments sorted by income");
         List<Investment> investmentsList = investmentRepository.findAllByUser_Id(user.getId());
+        log.info("Loading all investments sorted by income, getAllInvestmentsSortedByIncome()");
         if (investmentsList.isEmpty()) {
-            throw new IllegalArgumentException("List from database is empty. Add investments");
+            log.warn("List from database is empty. Add investments");
+            return investmentsList;
         }
-        return investmentsList.stream()
-                .sorted(Comparator.comparingDouble(Investment::getIncome)).toList();
+        try {
+            return investmentsList.stream()
+                    .sorted(Comparator.comparingDouble(Investment::getIncome)).toList();
+        } catch (NullPointerException e) {
+            log.warn("Outgoing empty list from : getAllInvestmentsSortedByIncome(), check income values");
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Investment> getAllInvestmentsSortedByDate(User user) {
+        List<Investment> investmentsList = investmentRepository.findAllByUser_Id(user.getId());
+        log.info("Loading all investments sorted by date, getAllInvestmentsSortedByIncome()");
+        if (investmentsList.isEmpty()) {
+            log.warn("List from database is empty. Add investments");
+            return Collections.emptyList();
+        }
+        try {
+            return investmentsList.stream()
+                    .sorted(Comparator.comparing(Investment::getCreated).reversed()).toList();
+        } catch (NullPointerException e) {
+            log.warn("Outgoing empty list from : getAllInvestmentsSortedByCreated(), check created values");
+            return Collections.emptyList();
+        }
     }
 
     public Investment get(Long id) {
@@ -38,10 +65,9 @@ public class InvestmentService {
     }
 
     public Investment addInvestment(Investment investment) {
-//        USER ID ALWAYS 1 FOR NOW
         User user = userService.getUserById(1L);
         investment.setUser(user);
-        log.info("Saving new investment: {}", investment.getCryptoCurrency());
+        log.info("Saving new investment: {}", investment.getInvestmentName());
         return investmentRepository.save(investment);
     }
 
@@ -51,9 +77,27 @@ public class InvestmentService {
     }
 
     public Investment update(Investment investment) {
-        log.info("Updating investment: {}", investment.getCryptoCurrency());
+        log.info("Updating investment: {}", investment.getInvestmentName());
         return investmentRepository.save(investment);
     }
 
+    public Investment setInvestmentParamsAndSave(InvestmentRequest request, String symbol) {
+        List<CryptoCurrency> cryptoList = coingeckoService.getCryptoFromApi();
+        Optional<CryptoCurrency> optionalCryptoCurrency = cryptoCurrencyService.findCryptoBySymbol(cryptoList, symbol);
+        if (optionalCryptoCurrency.isPresent()) {
+            CryptoCurrency cryptoCurrency = optionalCryptoCurrency.get();
+            Investment investment = new Investment();
+            investment.setInvestmentName(request.getInvestmentName());
+            investment.setQuantityOfCryptocurrency(request.getQuantityOfCryptocurrency());
+            investment.setCreated(dateService.setCurrentDate());
+            investment.setEnterPrice(cryptoCurrency.getPrice());
+            investment.setUser(userService.getUserById(1L));
+            log.info("Creating investment with crypto symbol: {}, setInvestmentParams()", symbol);
+            return addInvestment(investment);
+        } else {
+            log.warn("Crypto currency with symbol : {} NOT FOUND, setInvestmentParams()", symbol);
+            return null;
+        }
+    }
 
 }

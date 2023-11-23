@@ -1,70 +1,51 @@
 package pl.stepien.investmentappangular.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpSession;
+
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.stepien.investmentappangular.coingeckoApiConnection.CoingeckoApiConnection;
-import pl.stepien.investmentappangular.model.CryptoCurrency;
-import pl.stepien.investmentappangular.model.Investment;
-import pl.stepien.investmentappangular.service.CryptoCurrencyService;
+import pl.stepien.investmentappangular.model.request.InvestmentRequest;
+import pl.stepien.investmentappangular.model.entity.CryptoCurrency;
+import pl.stepien.investmentappangular.model.entity.Investment;
 import pl.stepien.investmentappangular.service.InvestmentService;
-import pl.stepien.investmentappangular.service.UserService;
+import pl.stepien.investmentappangular.service.RestFacadeService;
 
 
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("/investment")
 @RequiredArgsConstructor
 public class InvestmentController {
+    private static final Logger log = LogManager.getLogger(InvestmentController.class);
     private final InvestmentService investmentService;
-    private final UserService userService;
-    private final CoingeckoApiConnection coingeckoApiConnection;
-    private final CryptoCurrencyService cryptoCurrencyService;
-    private ObjectMapper objectMapper;
+    private final RestFacadeService restFacadeService;
 
     @GetMapping("/list")
     public ResponseEntity<List<Investment>> getSortedInvestments() {
-        return ResponseEntity.ok(investmentService.getAllInvestmentsSortedByIncome(userService.getUserById(1L)));
+        return ResponseEntity.ok(restFacadeService.getSortedInvestmentsResponse());
     }
 
-    @GetMapping("/save")
-    public ResponseEntity<CryptoCurrency> saveInvestmentPage(HttpSession session) {
-        String symbol = (String) session.getAttribute("symbol");
-
-        System.out.println(symbol);
-
-        List<CryptoCurrency> cryptoList = coingeckoApiConnection.getCrypto();
-        CryptoCurrency cryptoCurrency = cryptoCurrencyService.findCryptoBySymbol(cryptoList, symbol.toUpperCase());
-        return ResponseEntity.ok(cryptoCurrency);
+    @GetMapping("/cryptocurrency")
+    public ResponseEntity<CryptoCurrency> saveInvestmentPage() {
+        return ResponseEntity.ok(restFacadeService.saveInvestmentPageView());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Investment> saveInvestment(@RequestBody Map<String, Object> request,HttpSession session) {
-        objectMapper.findAndRegisterModules();
-        String symbol = (String) session.getAttribute("symbol");
-        Investment investment = objectMapper.convertValue(request.get("investment"), Investment.class);
-
-        List<CryptoCurrency> cryptoList = coingeckoApiConnection.getCrypto();
-        CryptoCurrency cryptoCurrency = cryptoCurrencyService.findCryptoBySymbol(cryptoList, symbol.toUpperCase());
-        System.out.println(cryptoCurrency);
-        investment.setEnterPrice(cryptoCurrency.getPrice());
-
-        System.out.println(investment);
-        Investment createdInvestment = investmentService.addInvestment(investment);
-        return ResponseEntity.ok(createdInvestment);
+    public ResponseEntity<Investment> saveInvestment(@RequestBody InvestmentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(restFacadeService.processSaveInvestment(request));
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Investment> getInvestment(@PathVariable("id") Long id) {
         return ResponseEntity.ok(investmentService.get(id));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteInvestment(@PathVariable("id") Long id) {
         investmentService.deleteInvestment(id);
     }

@@ -1,7 +1,7 @@
 package pl.stepien.investmentappangular.service;
 
 import org.springframework.stereotype.Service;
-import pl.stepien.investmentappangular.model.User;
+import pl.stepien.investmentappangular.model.entity.User;
 import pl.stepien.investmentappangular.repository.UserRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package pl.stepien.investmentappangular.model;
+package pl.stepien.investmentappangular.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
