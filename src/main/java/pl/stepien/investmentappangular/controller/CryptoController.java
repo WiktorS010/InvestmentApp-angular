@@ -23,7 +23,6 @@ public class CryptoController {
 
     @GetMapping("/list")
     public ResponseEntity<List<CryptoCurrency>> showCryptoList() {
-        log.info("Outgoing list of CryptoCurrencies, showCryptoList()");
         return ResponseEntity.ok(restFacadeService.getCryptoListResponse());
     }
 

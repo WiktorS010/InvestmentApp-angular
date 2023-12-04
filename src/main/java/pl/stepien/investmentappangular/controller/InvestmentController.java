@@ -42,7 +42,7 @@ public class InvestmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Investment> getInvestment(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(investmentService.get(id));
+        return ResponseEntity.ok(restFacadeService.getInvestmentIdView(id));
     }
 
     @DeleteMapping("/{id}")

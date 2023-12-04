@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import pl.stepien.investmentappangular.controller.CryptoController;
 import pl.stepien.investmentappangular.model.Utils.DataUtils;
 import pl.stepien.investmentappangular.model.entity.CryptoCurrency;
-import pl.stepien.investmentappangular.model.request.CryptoRequest;
-import pl.stepien.investmentappangular.model.response.CryptoResponse;
+import pl.stepien.investmentappangular.model.exception.customExceptions.CryptocurrnecyNotFoundException;
+import pl.stepien.investmentappangular.model.exception.customExceptions.InternalServerErrorException;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -21,12 +22,16 @@ public class CryptoCurrencyService {
     private final CoingeckoService coingeckoService;
 
     public CryptoCurrency getCryptoCurrencyForInvestment(String symbol) {
-        List<CryptoCurrency> cryptoList = coingeckoService.getCryptoFromApi();
-        Optional<CryptoCurrency> optionalCryptoCurrency = findCryptoBySymbol(cryptoList, symbol);
-        optionalCryptoCurrency.ifPresent(cryptoCurrency -> {
-            log.info("Crypto currency with symbol : {}, outgoing from getCryptoCurrencyForInvestment()", symbol);
-        });
-        return optionalCryptoCurrency.orElse(null);
+        try {
+            List<CryptoCurrency> cryptoList = coingeckoService.getCryptoFromApi();
+            Optional<CryptoCurrency> optionalCryptoCurrency = findCryptoBySymbol(cryptoList, symbol);
+            return optionalCryptoCurrency.orElseThrow(() -> {
+                log.error("Crypto currency with symbol : {} not found", symbol);
+                return new CryptocurrnecyNotFoundException(symbol);
+            });
+        } catch (Exception e) {
+            throw new InternalServerErrorException();
+        }
     }
 
     public Optional<CryptoCurrency> findCryptoBySymbol(List<CryptoCurrency> cryptoList, String symbol) {
@@ -50,5 +55,6 @@ public class CryptoCurrencyService {
             cryptoCurrency.setDayChange(Math.round(cryptoCurrency.getDayChange() * 100.0) / 100.0);
         }
     }
+
 
 }

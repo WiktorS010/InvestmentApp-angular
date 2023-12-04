@@ -13,10 +13,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import pl.stepien.investmentappangular.model.entity.CryptoCurrency;
+import pl.stepien.investmentappangular.model.exception.customExceptions.InternalServerErrorException;
+import pl.stepien.investmentappangular.model.exception.customExceptions.TooManyRequestsException;
 
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -29,7 +32,7 @@ public class CoingeckoService {
 
     public List<CryptoCurrency> getCryptoFromApi() {
         ResponseEntity<List<CryptoCurrency>> response = getExchange();
-        if (response.getStatusCode() == HttpStatus.OK) {
+        if (!Objects.equals(response.getBody(), Collections.emptyList())) {
             log.info("List of cryptocurrency downloaded from coingecko api, getCryptoFromApi()");
             return response.getBody();
         } else
@@ -39,14 +42,24 @@ public class CoingeckoService {
 
     private ResponseEntity<List<CryptoCurrency>> getExchange() {
         try {
-            return restTemplate.exchange(CRYPTO_URL, HttpMethod.GET, null, new ParameterizedTypeReference<List<CryptoCurrency>>() {
-            });
+        ResponseEntity<List<CryptoCurrency>> responseEntity = restTemplate.exchange(
+                CRYPTO_URL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<CryptoCurrency>>() {
+                });
+            log.info("Loading cryptocurrency List in process...");
+            if (responseEntity.getBody() == null){
+                return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+            } else {
+                return responseEntity;
+            }
         } catch (HttpClientErrorException.TooManyRequests e) {
             log.warn("TooManyRequests in coingecko Api, getExchange()", e);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Collections.emptyList());
+            throw new TooManyRequestsException();
         } catch (RestClientException e) {
-            log.warn("RestClientException, getExchange()", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.emptyList());
+            log.warn("RestClientException, getExchange(), returned: emptyList", e);
+            throw new InternalServerErrorException();
         }
     }
 }
