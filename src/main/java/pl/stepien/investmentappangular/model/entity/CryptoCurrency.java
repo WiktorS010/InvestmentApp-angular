@@ -34,8 +34,6 @@ public class CryptoCurrency {
     @JsonProperty("market_cap_string")
     private String marketCapString;
     private String image;
-    @OneToOne
-    private Investment investment;
 
 
 }

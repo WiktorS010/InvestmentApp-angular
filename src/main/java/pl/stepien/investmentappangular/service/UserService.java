@@ -1,6 +1,7 @@
 package pl.stepien.investmentappangular.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -10,14 +11,11 @@ import pl.stepien.investmentappangular.model.exception.customExceptions.Internal
 import pl.stepien.investmentappangular.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private static final Logger log = LogManager.getLogger(InvestmentController.class);
     private final UserRepository userRepository;
 
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public User getUserById(Long id) {
         try {
