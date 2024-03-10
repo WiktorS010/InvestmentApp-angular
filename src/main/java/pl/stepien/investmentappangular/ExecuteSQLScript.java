@@ -33,4 +33,13 @@ public class ExecuteSQLScript {
 
         connection.close();
     }
+
+    public static void main(String[] args) {
+        ExecuteSQLScript executeSQLScript = new ExecuteSQLScript();
+        try {
+            executeSQLScript.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

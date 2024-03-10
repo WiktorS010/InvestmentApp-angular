@@ -73,6 +73,11 @@ public class InvestmentService {
         if(investmentRepository.findById(id).isPresent()){
             log.info("Deleting investment by id: {}", id);
             investmentRepository.deleteById(id);
+            if(investmentRepository.findById(id).isPresent()){
+                log.warn("Investment removal failed");
+            } else {
+                log.info("Investment deleted with success");
+            }
         } else {
             log.warn("No investment with id: {} in database", id);
         }

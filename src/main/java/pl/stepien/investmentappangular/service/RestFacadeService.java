@@ -33,11 +33,9 @@ public class RestFacadeService {
 
 
     public void sendInfoFromCryptoList(CryptoRequest request) {
-        log.info("Symbol received by sendInfoFromCryptoList(), symbolToShare setting: {}", symbolToShare);
         cryptoRequestService.checkCryptoRequestSymbolValue(request);
         this.symbolToShare = request.getSymbol();
-        log.info("Symbol accepted and set in Facade: sendInfoFromCryptoList()");
-
+        log.info("Symbol received by sendInfoFromCryptoList(), symbolToShare setting: {}", symbolToShare);
     }
 
     public String getSymbolToShare() {

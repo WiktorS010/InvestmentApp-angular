@@ -28,7 +28,7 @@ public class CryptoController {
 
     @PostMapping("/symbol")
     public ResponseEntity<Void> receiveInfoFromCryptoList(@RequestBody CryptoRequest request) {
-        log.info("Incoming request Cryptocurrency symbol: {}", request.getSymbol() + ", sendInfoFromCryptoList()");
+        log.info("Incoming request Cryptocurrency symbol: {}", request.getSymbol() + ", receiveInfoFromCryptoList()");
         restFacadeService.sendInfoFromCryptoList(request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
